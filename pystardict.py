@@ -165,7 +165,13 @@ class _StarDictIdx(object):
             record_tuple = unpack(
                 '!%sc%sL' % (c + 1, idx_offset_format), matched_record)
             word, cords = record_tuple[:c], record_tuple[c + 1:]
-            self._idx[b''.join(word)].append(cords)
+            word_bytes =b''.join(word)
+
+            if b',' in word_bytes:
+                prefix = word_bytes.split(b",")[0]
+                self._idx[prefix].append(cords)
+
+            self._idx[word_bytes].append(cords)
 
     def __getitem__(self, word):
         """
